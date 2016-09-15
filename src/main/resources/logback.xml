@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scanPeriod="30 seconds" scan="true" debug="false">
+<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <Pattern>
+            %d{yyyy-MM-dd HH:mm:ss:SSS} %t %-5level %logger{35} - %msg%n
+        </Pattern>
+    </encoder>
+</appender>
+<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>log/app-server.log</File>
+    <param name="Append" value="true" />
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <Pattern>
+            %d{yyyy-MM-dd HH:mm:ss:SSS} %t %-5level %logger{35} - %msg%n
+        </Pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>log/app-server-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <maxHistory>30</maxHistory>
+        <totalSizeCap>10GB</totalSizeCap>
+        <maxFileSize>10MB</maxFileSize>
+    </rollingPolicy>
+</appender>
+<appender name="async-file" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>500</queueSize>
+    <appender-ref ref="file"/>
+    <includeCallerData>true</includeCallerData><!-- Remove for performance if desired -->
+</appender>
+<appender name="async-console" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>500</queueSize>
+    <appender-ref ref="console"/>
+</appender>
+
+<root level="INFO">
+    <appender-ref ref="async-file"/>
+    <!--<appender-ref ref="async-console"/>  By default console logger -->
+</root>
+
+
+</configuration>
